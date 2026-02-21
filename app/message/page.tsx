@@ -13,6 +13,8 @@ function MessageForm() {
   const [recipientName, setRecipientName] = useState("");
   const [message, setMessage] = useState("");
   const [senderName, setSenderName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const wordCount = message.trim().split(/\s+/).filter(word => word.length > 0).length;
   const isOverLimit = wordCount > 30;
@@ -20,26 +22,38 @@ function MessageForm() {
   const handleSubmit = async () => {
     if (!recipientName || !message || !senderName || isOverLimit || !plant || !pot) return;
     
-    const { data, error } = await supabase
-      .from("plants")
-      .insert([
-        {
-          plant_name: plant,
-          pot_type: pot,
-          sender_name: senderName,
-          recipient_name: recipientName,
-          message: message,
-        },
-      ])
-      .select()
-      .single();
+    setIsSubmitting(true);
+    setError(null);
 
-    if (error) {
-      console.error("Error saving plant:", error);
-      return;
+    try {
+      const { data, error } = await supabase
+        .from("plants")
+        .insert([
+          {
+            plant_name: plant,
+            pot_type: pot,
+            sender_name: senderName,
+            recipient_name: recipientName,
+            message: message,
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error saving plant:", error);
+        setError("Failed to save plant. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      console.log("Plant saved successfully:", data);
+      router.push(`/p/${data.id}`);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred. Please try again.");
+      setIsSubmitting(false);
     }
-
-    router.push(`/p/${data.id}`);
   };
 
   return (
@@ -101,12 +115,18 @@ function MessageForm() {
 
       </div>
 
+      {error && (
+        <p className="mt-8 font-cormorant text-sm text-red-600">
+          {error}
+        </p>
+      )}
+
       <button 
         onClick={handleSubmit}
-        disabled={!recipientName || !message || !senderName || isOverLimit}
+        disabled={!recipientName || !message || !senderName || isOverLimit || isSubmitting}
         className="mt-16 px-10 py-3 bg-black text-white font-cormorant text-sm uppercase tracking-[0.2em] transition-opacity hover:opacity-75 font-light disabled:opacity-30 disabled:cursor-not-allowed"
       >
-        Grow This Plant
+        {isSubmitting ? "Planting..." : "Grow This Plant"}
       </button>
 
     </main>
