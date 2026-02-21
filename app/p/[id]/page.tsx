@@ -49,10 +49,19 @@ export default function PlantViewPage() {
   useEffect(() => {
     if (!plantData) return;
 
-    // Calculate and update growth stage
+    // Get or set the viewer's first visit time for this plant
+    const storageKey = `plant_first_view_${id}`;
+    let firstViewTime = localStorage.getItem(storageKey);
+    
+    if (!firstViewTime) {
+      // First time viewing this plant
+      firstViewTime = Date.now().toString();
+      localStorage.setItem(storageKey, firstViewTime);
+    }
+
+    // Calculate and update growth stage based on viewer's first visit
     const updateStage = () => {
-      const createdAt = new Date(plantData.created_at).getTime();
-      const timePassed = (Date.now() - createdAt) / 1000; // in seconds
+      const timePassed = (Date.now() - parseInt(firstViewTime!)) / 1000; // in seconds
       
       if (timePassed < 10) {
         setStage("seed");
@@ -69,7 +78,7 @@ export default function PlantViewPage() {
     const interval = setInterval(updateStage, 1000);
 
     return () => clearInterval(interval);
-  }, [plantData]);
+  }, [plantData, id]);
 
   if (loading || !plantData) {
     return (
