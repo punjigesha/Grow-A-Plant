@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { plantStore } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 function MessageForm() {
   const searchParams = useSearchParams();
@@ -17,24 +17,29 @@ function MessageForm() {
   const wordCount = message.trim().split(/\s+/).filter(word => word.length > 0).length;
   const isOverLimit = wordCount > 30;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!recipientName || !message || !senderName || isOverLimit || !plant || !pot) return;
     
-    // Generate unique ID
-    const id = crypto.randomUUID();
-    
-    // Save to store
-    plantStore.set(id, {
-      plant,
-      pot,
-      recipient: recipientName,
-      sender: senderName,
-      message,
-      createdAt: Date.now()
-    });
-    
-    // Redirect to plant view
-    router.push(`/p/${id}`);
+    const { data, error } = await supabase
+      .from("plants")
+      .insert([
+        {
+          plant_name: plant,
+          pot_type: pot,
+          sender_name: senderName,
+          recipient_name: recipientName,
+          message: message,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error saving plant:", error);
+      return;
+    }
+
+    router.push(`/p/${data.id}`);
   };
 
   return (

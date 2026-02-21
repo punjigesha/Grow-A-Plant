@@ -2,9 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { plantStore } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 type GrowthStage = "seed" | "sprout" | "leaves" | "bloom";
+
+interface PlantData {
+  id: string;
+  plant_name: string;
+  pot_type: string;
+  recipient_name: string;
+  sender_name: string;
+  message: string;
+  created_at: string;
+}
 
 export default function PlantViewPage() {
   const params = useParams();
@@ -12,22 +22,37 @@ export default function PlantViewPage() {
   const id = params.id as string;
   
   const [stage, setStage] = useState<GrowthStage>("seed");
-  const [plantData, setPlantData] = useState<ReturnType<typeof plantStore.get> | null>(null);
+  const [plantData, setPlantData] = useState<PlantData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch plant data
-    const data = plantStore.get(id);
-    
-    if (!data) {
-      router.push("/");
-      return;
-    }
-    
-    setPlantData(data);
+    const fetchPlant = async () => {
+      const { data, error } = await supabase
+        .from("plants")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        console.error("Error fetching plant:", error);
+        router.push("/");
+        return;
+      }
+
+      setPlantData(data);
+      setLoading(false);
+    };
+
+    fetchPlant();
+  }, [id, router]);
+
+  useEffect(() => {
+    if (!plantData) return;
 
     // Calculate and update growth stage
     const updateStage = () => {
-      const timePassed = (Date.now() - data.createdAt) / 1000; // in seconds
+      const createdAt = new Date(plantData.created_at).getTime();
+      const timePassed = (Date.now() - createdAt) / 1000; // in seconds
       
       if (timePassed < 10) {
         setStage("seed");
@@ -44,10 +69,14 @@ export default function PlantViewPage() {
     const interval = setInterval(updateStage, 1000);
 
     return () => clearInterval(interval);
-  }, [id, router]);
+  }, [plantData]);
 
-  if (!plantData) {
-    return null;
+  if (loading || !plantData) {
+    return (
+      <main className="min-h-screen bg-[#F3EFE6] flex items-center justify-center">
+        <p className="font-cormorant text-gray-600">Loading...</p>
+      </main>
+    );
   }
 
   const getStageText = (): string => {
@@ -70,11 +99,11 @@ export default function PlantViewPage() {
         
         <div className="space-y-6">
           <h1 className="text-6xl font-great-vibes text-gray-800 font-normal">
-            {plantData.plant}
+            {plantData.plant_name}
           </h1>
           
           <p className="font-cormorant text-xs uppercase tracking-[0.3em] text-gray-600 font-light">
-            In a {plantData.pot} Pot
+            In a {plantData.pot_type} Pot
           </p>
         </div>
 
@@ -85,7 +114,7 @@ export default function PlantViewPage() {
         {stage === "bloom" && (
           <div className="mt-16 space-y-6 animate-fade-in">
             <p className="font-cormorant text-base text-gray-700 font-light">
-              To {plantData.recipient},
+              To {plantData.recipient_name},
             </p>
             
             <p className="font-cormorant text-xl text-gray-800 leading-relaxed font-light italic">
@@ -93,7 +122,7 @@ export default function PlantViewPage() {
             </p>
             
             <p className="font-cormorant text-base text-gray-700 font-light">
-              — {plantData.sender}
+              — {plantData.sender_name}
             </p>
           </div>
         )}
