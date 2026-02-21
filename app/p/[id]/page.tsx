@@ -24,6 +24,10 @@ export default function PlantViewPage() {
   const [stage, setStage] = useState<GrowthStage>("seed");
   const [plantData, setPlantData] = useState<PlantData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const plantUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareMessage = "hey, grow a plant with me!";
 
   useEffect(() => {
     const fetchPlant = async () => {
@@ -80,6 +84,33 @@ export default function PlantViewPage() {
     return () => clearInterval(interval);
   }, [plantData, id]);
 
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(plantUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Grow a Plant",
+          text: shareMessage,
+          url: plantUrl,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      // Fallback to copy if Web Share API is not supported
+      handleCopyLink();
+    }
+  };
+
   if (loading || !plantData) {
     return (
       <main className="min-h-screen bg-[#F3EFE6] flex items-center justify-center">
@@ -135,6 +166,31 @@ export default function PlantViewPage() {
             </p>
           </div>
         )}
+
+        <div className="mt-16 flex flex-col gap-4 items-center">
+          <button
+            onClick={() => router.push("/")}
+            className="px-8 py-3 bg-black text-white font-cormorant text-sm uppercase tracking-[0.2em] transition-opacity hover:opacity-75 font-light"
+          >
+            Grow a New Plant!
+          </button>
+          
+          <div className="flex gap-4">
+            <button
+              onClick={handleCopyLink}
+              className="px-8 py-3 border border-black bg-transparent text-black font-cormorant text-sm uppercase tracking-[0.2em] transition-opacity hover:opacity-60 font-light"
+            >
+              {copied ? "Copied!" : "Copy Link"}
+            </button>
+            
+            <button
+              onClick={handleShare}
+              className="px-8 py-3 border border-black bg-transparent text-black font-cormorant text-sm uppercase tracking-[0.2em] transition-opacity hover:opacity-60 font-light"
+            >
+              Share
+            </button>
+          </div>
+        </div>
 
       </div>
 
