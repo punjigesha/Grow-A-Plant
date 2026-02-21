@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { plantStore } from "@/lib/store";
 
-export default function MessagePage() {
+function MessageForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const plant = searchParams.get("plant");
@@ -105,5 +105,17 @@ export default function MessagePage() {
       </button>
 
     </main>
+  );
+}
+
+export default function MessagePage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-[#F3EFE6] flex items-center justify-center">
+        <p className="font-cormorant text-gray-600">Loading...</p>
+      </main>
+    }>
+      <MessageForm />
+    </Suspense>
   );
 }

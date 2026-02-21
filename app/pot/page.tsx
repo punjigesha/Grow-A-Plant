@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function PotPage() {
+export const dynamic = "force-dynamic";
+
+function PotContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const plantFromUrl = searchParams.get("plant");
@@ -109,5 +111,17 @@ export default function PotPage() {
       )}
 
     </main>
+  );
+}
+
+export default function PotPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-[#F3EFE6] flex items-center justify-center">
+        <p className="font-cormorant text-gray-600">Loading...</p>
+      </main>
+    }>
+      <PotContent />
+    </Suspense>
   );
 }

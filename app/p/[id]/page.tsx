@@ -12,7 +12,7 @@ export default function PlantViewPage() {
   const id = params.id as string;
   
   const [stage, setStage] = useState<GrowthStage>("seed");
-  const [plantData, setPlantData] = useState<ReturnType<typeof plantStore.get>>(null);
+  const [plantData, setPlantData] = useState<ReturnType<typeof plantStore.get> | null>(null);
 
   useEffect(() => {
     // Fetch plant data
