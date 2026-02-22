@@ -15,8 +15,18 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Grow a Plant for Someone",
-  description: "A vintage botanical experience",
+  title: "Someone Grew This For You",
+  description: "someone sent you something that grows 🌱",
+  openGraph: {
+    title: "Someone Grew This For You",
+    description: "someone sent you something that grows 🌱",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Someone Grew This For You",
+    description: "someone sent you something that grows 🌱",
+  },
 };
 
 export default function RootLayout({

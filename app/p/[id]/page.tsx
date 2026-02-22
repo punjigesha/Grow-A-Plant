@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import PlantGrowth from "@/components/PlantGrowth";
+import Head from "next/head";
 
 type GrowthStage = "seed" | "sprout" | "leaves" | "bloom";
 
@@ -29,7 +30,8 @@ export default function PlantViewPage() {
   const [timeUntilNext, setTimeUntilNext] = useState<number>(0);
 
   const plantUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const shareMessage = "hey, grow a plant with me!";
+  const shareTitle = "Someone Grew This For You";
+  const shareDescription = "someone sent you something that grows 🌱";
 
   useEffect(() => {
     const fetchPlant = async () => {
@@ -99,8 +101,8 @@ export default function PlantViewPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Grow a Plant",
-          text: shareMessage,
+          title: shareTitle,
+          text: shareDescription,
           url: plantUrl,
         });
       } catch (err) {
@@ -111,6 +113,49 @@ export default function PlantViewPage() {
       handleCopyLink();
     }
   };
+
+  // Set meta tags for social sharing
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      // Update page title
+      document.title = shareTitle;
+      
+      // Update or create meta tags
+      const updateMetaTag = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.content = content;
+      };
+
+      const updateMetaName = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          document.head.appendChild(meta);
+        }
+        meta.content = content;
+      };
+
+      // Open Graph tags
+      updateMetaTag('og:title', shareTitle);
+      updateMetaTag('og:description', shareDescription);
+      updateMetaTag('og:url', plantUrl);
+      updateMetaTag('og:type', 'website');
+      
+      // Twitter Card tags
+      updateMetaName('twitter:card', 'summary_large_image');
+      updateMetaName('twitter:title', shareTitle);
+      updateMetaName('twitter:description', shareDescription);
+      
+      // Description meta tag
+      updateMetaName('description', shareDescription);
+    }
+  }, [plantUrl]);
 
   if (loading || !plantData) {
     return (
