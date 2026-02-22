@@ -13,7 +13,7 @@ export default function PlantIllustration({ plantName, stage, className = "" }: 
   // Convert plant name to lowercase for file path
   const plantFolder = plantName.toLowerCase();
   
-  const imagePath = `/plants/${plantFolder}/${stageFileName}.svg`;
+  const imagePath = `/plants/${plantFolder}/${stageFileName}.png`;
 
   return (
     <Image
