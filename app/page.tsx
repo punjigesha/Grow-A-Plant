@@ -9,7 +9,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#F3EFE6] flex flex-col items-center justify-center p-8">
       
       <div className="text-center space-y-8 mb-24">
-        <h1 className="text-6xl font-great-vibes text-gray-800 font-normal">
+        <h1 className="text-6xl font-rallomy text-gray-800 font-normal">
           Grow a Plant
         </h1>
         

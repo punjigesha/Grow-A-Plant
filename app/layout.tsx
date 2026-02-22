@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Great_Vibes, Cormorant_Garamond } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const greatVibes = Great_Vibes({
-  variable: "--font-great-vibes",
-  subsets: ["latin"],
-  weight: ["400"],
+const rallomy = localFont({
+  src: "./fonts/Rallomy-Regular.ttf",
+  variable: "--font-rallomy",
+  display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
@@ -37,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${greatVibes.variable} ${cormorant.variable} antialiased`}
+        className={`${rallomy.variable} ${cormorant.variable} antialiased`}
       >
         {children}
       </body>

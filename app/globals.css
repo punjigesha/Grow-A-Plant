@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-family-great-vibes: var(--font-great-vibes);
+  --font-family-rallomy: var(--font-rallomy);
   --font-family-cormorant: var(--font-cormorant);
+}
+
+.font-rallomy {
+  font-family: var(--font-rallomy);
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant);
 }
 
 :root {

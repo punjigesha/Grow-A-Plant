@@ -184,7 +184,7 @@ export default function PlantViewPage() {
       <div className="text-center space-y-12 max-w-2xl">
         
         <div className="space-y-6">
-          <h1 className="text-6xl font-great-vibes text-gray-800 font-normal">
+          <h1 className="text-6xl font-rallomy text-gray-800 font-normal">
             {plantData.plant_name}
           </h1>
         </div>
