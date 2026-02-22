@@ -22,12 +22,14 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
 
   return (
     <div className="plant-container">
-      <img
-        key={currentStage}
-        src={plantImage}
-        alt={`${plantName} ${currentStage}`}
-        className="plant-image"
-      />
+      <div className="plant-breathe">
+        <img
+          key={currentStage}
+          src={plantImage}
+          alt={`${plantName} ${currentStage}`}
+          className="plant-image"
+        />
+      </div>
     </div>
   );
 }
