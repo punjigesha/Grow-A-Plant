@@ -26,6 +26,7 @@ export default function PlantViewPage() {
   const [plantData, setPlantData] = useState<PlantData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [timeUntilNext, setTimeUntilNext] = useState<number>(0);
 
   const plantUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareMessage = "hey, grow a plant with me!";
@@ -59,15 +60,23 @@ export default function PlantViewPage() {
       const createdAt = new Date(plantData.created_at).getTime();
       const timePassed = (Date.now() - createdAt) / 1000; // in seconds
       
+      let nextStageTime = 0;
+      
       if (timePassed < 10) {
         setStage("seed");
+        nextStageTime = 10 - timePassed;
       } else if (timePassed < 30) {
         setStage("sprout");
+        nextStageTime = 30 - timePassed;
       } else if (timePassed < 60) {
         setStage("leaves");
+        nextStageTime = 60 - timePassed;
       } else {
         setStage("bloom");
+        nextStageTime = 0;
       }
+      
+      setTimeUntilNext(Math.ceil(nextStageTime));
     };
 
     updateStage();
@@ -144,6 +153,12 @@ export default function PlantViewPage() {
         <p className="font-cormorant text-lg text-gray-700 italic font-light">
           {getStageText()}
         </p>
+
+        {stage !== "bloom" && timeUntilNext > 0 && (
+          <p className="font-cormorant text-sm text-gray-500 font-light">
+            Growing quietly… Next change in {timeUntilNext}s
+          </p>
+        )}
 
         {stage === "bloom" && (
           <div className="mt-16 space-y-6 animate-fade-in">
