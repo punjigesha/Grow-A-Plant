@@ -17,13 +17,13 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
     bloom: "bloom"
   };
 
-  // Determine visibility for each stage
+  // Determine visibility and animation classes for each stage
   const getStageClasses = (stage: keyof typeof stages) => {
     let isVisible = false;
 
     if (stage === "seed" && currentStage === "seed") {
       isVisible = true;
-    } else if (stage === "sprout" && (currentStage === "sprout" || currentStage === "leaves" || currentStage === "bloom")) {
+    } else if (stage === "sprout" && currentStage !== "seed") {
       isVisible = true;
     } else if (stage === "leaves" && (currentStage === "leaves" || currentStage === "bloom")) {
       isVisible = true;
@@ -31,13 +31,18 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
       isVisible = true;
     }
 
-    return `absolute inset-0 transition-all duration-[2000ms] ease-in-out ${
-      isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+    return `absolute inset-0 transition-all duration-[2600ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${
+      isVisible 
+        ? "opacity-100 scale-100 blur-0 translate-y-0" 
+        : "opacity-0 scale-[0.96] blur-sm translate-y-2"
     }`;
   };
 
   return (
-    <div className="relative w-[260px] h-[260px] mx-auto">
+    <div className="relative w-[280px] h-[280px] mx-auto">
+      {/* Watercolor glow effect */}
+      <div className="absolute inset-0 bg-[#f4efe6] blur-3xl opacity-40 rounded-full" />
+      
       {/* Seed stage */}
       <div className={getStageClasses("seed")}>
         <Image
@@ -46,6 +51,7 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
           fill
           className="object-contain"
           priority
+          loading="eager"
         />
       </div>
 
@@ -57,6 +63,7 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
           fill
           className="object-contain"
           priority
+          loading="eager"
         />
       </div>
 
@@ -68,6 +75,7 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
           fill
           className="object-contain"
           priority
+          loading="eager"
         />
       </div>
 
@@ -79,6 +87,7 @@ export default function PlantGrowth({ plantName, currentStage }: PlantGrowthProp
           fill
           className="object-contain"
           priority
+          loading="eager"
         />
       </div>
     </div>
