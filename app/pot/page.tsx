@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
 function PlantSelection() {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [selectedPlant, setSelectedPlant] = useState<string | null>(null);
 
@@ -25,21 +25,34 @@ function PlantSelection() {
         </p>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-x-16 gap-y-12 mb-20 max-w-3xl">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20 max-w-5xl">
         {plants.map((plant) => (
           <button
             key={plant}
             onClick={() => setSelectedPlant(plant)}
-            className={`font-cormorant text-3xl transition-all duration-300 relative font-light
+            className={`flex flex-col items-center gap-4 p-6 transition-all duration-300 rounded-2xl
               ${selectedPlant === plant 
-                ? "text-gray-800" 
-                : "text-gray-400 hover:text-gray-600"
+                ? "bg-white/50 shadow-lg" 
+                : "hover:bg-white/30"
               }`}
           >
-            {plant}
-            {selectedPlant === plant && (
-              <span className="absolute -bottom-2 left-0 right-0 h-px bg-gray-800"></span>
-            )}
+            <div className="relative w-32 h-32">
+              <Image
+                src={`/plants/${plant.toLowerCase()}/bloom.png`}
+                alt={plant}
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span className={`font-cormorant text-2xl transition-all duration-300 font-light
+              ${selectedPlant === plant 
+                ? "text-gray-800" 
+                : "text-gray-500"
+              }`}
+            >
+              {plant}
+            </span>
           </button>
         ))}
       </div>
