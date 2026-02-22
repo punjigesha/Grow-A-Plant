@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import PlantIllustration from "@/components/PlantIllustration";
+import PlantGrowth from "@/components/PlantGrowth";
 
 type GrowthStage = "seed" | "sprout" | "leaves" | "bloom";
 
@@ -148,14 +148,11 @@ export default function PlantViewPage() {
           </p>
         </div>
 
-        {/* Plant Illustration */}
-        <div className="w-64 h-64 mx-auto flex items-center justify-center">
-          <PlantIllustration 
-            plantName={plantData.plant_name} 
-            stage={stage} 
-            className="w-48 h-48" 
-          />
-        </div>
+        {/* Plant Growth Animation */}
+        <PlantGrowth 
+          plantName={plantData.plant_name} 
+          currentStage={stage}
+        />
 
         <p className="font-cormorant text-lg text-gray-700 italic font-light">
           {getStageText()}
