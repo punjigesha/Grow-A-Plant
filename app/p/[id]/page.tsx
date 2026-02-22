@@ -142,10 +142,6 @@ export default function PlantViewPage() {
           <h1 className="text-6xl font-great-vibes text-gray-800 font-normal">
             {plantData.plant_name}
           </h1>
-          
-          <p className="font-cormorant text-xs uppercase tracking-[0.3em] text-gray-600 font-light">
-            In a {plantData.pot_type} Pot
-          </p>
         </div>
 
         {/* Plant Growth Animation */}
