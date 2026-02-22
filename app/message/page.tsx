@@ -8,7 +8,6 @@ function MessageForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const plant = searchParams.get("plant");
-  const pot = searchParams.get("pot");
   
   const [recipientName, setRecipientName] = useState("");
   const [message, setMessage] = useState("");
@@ -20,10 +19,14 @@ function MessageForm() {
   const isOverLimit = wordCount > 30;
 
   const handleSubmit = async () => {
-    if (!recipientName || !message || !senderName || isOverLimit || !plant || !pot) return;
+    if (!recipientName || !message || !senderName || isOverLimit || !plant) return;
     
     setIsSubmitting(true);
     setError(null);
+
+    // Randomly select a pot
+    const pots = ["Clay", "Ceramic", "Glass", "Vintage"];
+    const randomPot = pots[Math.floor(Math.random() * pots.length)];
 
     try {
       const { data, error } = await supabase
@@ -31,7 +34,7 @@ function MessageForm() {
         .insert([
           {
             plant_name: plant,
-            pot_type: pot,
+            pot_type: randomPot,
             sender_name: senderName,
             recipient_name: recipientName,
             message: message,

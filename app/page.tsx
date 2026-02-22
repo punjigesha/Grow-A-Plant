@@ -20,7 +20,7 @@ export default function Home() {
 
       <div className="flex flex-col gap-5 items-center">
         <button 
-          onClick={() => router.push("/pot?plant=selection")}
+          onClick={() => router.push("/pot")}
           className="px-10 py-3 bg-black text-white font-cormorant text-sm uppercase tracking-[0.2em] transition-opacity hover:opacity-75 font-light"
         >
           Build a Plant
