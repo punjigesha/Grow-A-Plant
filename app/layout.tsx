@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond } from "next/font/google";
-import localFont from "next/font/local";
+import { Beth_Ellen, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-const rallomy = localFont({
-  src: "./fonts/Rallomy-Regular.ttf",
-  variable: "--font-rallomy",
-  display: "swap",
+const bethEllen = Beth_Ellen({
+  variable: "--font-beth-ellen",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -38,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${rallomy.variable} ${cormorant.variable} antialiased`}
+        className={`${bethEllen.variable} ${cormorant.variable} antialiased`}
       >
         {children}
       </body>

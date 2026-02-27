@@ -63,7 +63,7 @@ function MessageForm() {
     <main className="min-h-screen bg-[#F3EFE6] flex flex-col items-center justify-center p-8">
       
       <div className="text-center space-y-6 mb-16">
-        <h1 className="text-6xl font-rallomy text-gray-800 font-normal">
+        <h1 className="text-6xl font-beth-ellen text-gray-800 font-normal">
           Plant it with a note
         </h1>
         

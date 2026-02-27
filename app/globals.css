@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-family-rallomy: var(--font-rallomy);
+  --font-family-beth-ellen: var(--font-beth-ellen);
   --font-family-cormorant: var(--font-cormorant);
 }
 
-.font-rallomy {
-  font-family: var(--font-rallomy);
+.font-beth-ellen {
+  font-family: var(--font-beth-ellen);
 }
 
 .font-cormorant {

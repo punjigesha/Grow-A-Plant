@@ -57,10 +57,20 @@ export default function PlantViewPage() {
   useEffect(() => {
     if (!plantData) return;
 
-    // Calculate and update growth stage based on plant creation time
+    // Get or set the viewer's first visit time for this plant
+    const storageKey = `plant-view-${id}`;
+    let viewStartTime = localStorage.getItem(storageKey);
+    
+    if (!viewStartTime) {
+      // First time viewing this plant - record the current time
+      viewStartTime = Date.now().toString();
+      localStorage.setItem(storageKey, viewStartTime);
+    }
+
+    // Calculate and update growth stage based on viewer's first visit time
     const updateStage = () => {
-      const createdAt = new Date(plantData.created_at).getTime();
-      const timePassed = (Date.now() - createdAt) / 1000; // in seconds
+      const startTime = parseInt(viewStartTime!);
+      const timePassed = (Date.now() - startTime) / 1000; // in seconds
       
       let nextStageTime = 0;
       
@@ -85,7 +95,7 @@ export default function PlantViewPage() {
     const interval = setInterval(updateStage, 1000);
 
     return () => clearInterval(interval);
-  }, [plantData]);
+  }, [plantData, id]);
 
   const handleCopyLink = async () => {
     try {
@@ -184,7 +194,7 @@ export default function PlantViewPage() {
       <div className="text-center space-y-12 max-w-2xl">
         
         <div className="space-y-6">
-          <h1 className="text-6xl font-rallomy text-gray-800 font-normal">
+          <h1 className="text-6xl font-beth-ellen text-gray-800 font-normal">
             {plantData.plant_name}
           </h1>
         </div>
