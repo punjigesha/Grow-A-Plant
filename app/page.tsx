@@ -10,7 +10,7 @@ export default function Home() {
       
       <div className="text-center space-y-8 mb-24">
         <h1 className="text-6xl font-beth-ellen text-gray-800 font-normal">
-          Grow a Plant
+          grow a plant
         </h1>
         
         <p className="font-cormorant text-xs uppercase tracking-[0.3em] text-gray-600 font-light">
